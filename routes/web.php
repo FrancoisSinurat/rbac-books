@@ -4,7 +4,17 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use App\Http\Controllers\BookController;
+use Illuminate\Support\Facades\Route;
 
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/books', [BookController::class, 'index']);
+    Route::post('/books', [BookController::class, 'store'])->middleware('role:admin,editor');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/books/{id}', [BookController::class, 'show']);
+    Route::put('/books/{id}', [BookController::class, 'update'])->middleware('role:admin,editor');
+    Route::delete('/books/{id}', [BookController::class, 'destroy'])->middleware('role:admin');
+});
 Route::post('/register', function (Request $request) {
     $request->validate([
         'name' => 'required|string',
@@ -36,10 +46,4 @@ Route::post('/login', function (Request $request) {
     }
 
     return response()->json(['token' => $user->createToken('API Token')->plainTextToken]);
-});
-
-Route::middleware(['auth', 'role:admin|editor'])->group(function () {
-    Route::post('/books', [BookController::class, 'store']);
-    Route::put('/books/{book}', [BookController::class, 'update']);
-    Route::delete('/books/{book}', [BookController::class, 'destroy']);
 });

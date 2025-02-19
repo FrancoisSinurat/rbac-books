@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
-    //
+    use HasFactory;
+
+    protected $table = 'books'; // Menentukan nama tabel secara eksplisit
+    protected $fillable = ['judul', 'penulis', 'tahun_terbit', 'deskripsi'];
 }

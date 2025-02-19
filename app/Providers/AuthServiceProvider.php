@@ -12,7 +12,7 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * The policy mappings for the application.
      *
-     * @var array<class-string, class-string>
+     * @var array<class-string>
      */
     protected $policies = [
         Book::class => BookPolicy::class,

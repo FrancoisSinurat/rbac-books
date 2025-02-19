@@ -14,15 +14,14 @@ class BookController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorize('create', Book::class);
-        $request->validate([
-            'judul' => 'required|string',
-            'penulis' => 'required|string',
+        $validated = $request->validate([
+            'judul' => 'required|string|max:255',
+            'penulis' => 'required|string|max:255',
             'tahun_terbit' => 'required|integer',
             'deskripsi' => 'required|string',
         ]);
 
-        $book = Book::create($request->all());
+        $book = Book::create($validated);
         return response()->json($book, 201);
     }
 
@@ -34,8 +33,16 @@ class BookController extends Controller
     public function update(Request $request, $id)
     {
         $this->authorize('update', Book::class);
+
+        $validated = $request->validate([
+            'judul' => 'sometimes|string|max:255',
+            'penulis' => 'sometimes|string|max:255',
+            'tahun_terbit' => 'sometimes|integer',
+            'deskripsi' => 'sometimes|string',
+        ]);
+
         $book = Book::findOrFail($id);
-        $book->update($request->all());
+        $book->update($validated);
 
         return response()->json($book, 200);
     }
